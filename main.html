@@ -1,16 +1,147 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Login Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 60px;
+      font-family: Arial, sans-serif;
+      background: #f1f4fa;
+    }
+    form {
+      background: #fff;
+      padding: 32px 38px 24px 38px;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12), 0 1.5px 3px rgba(0,0,0,0.08);
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    input[type='text'], input[type='password'] {
+      padding: 8px 10px;
+      border: 1.5px solid #c7c9de;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    input[type='checkbox'] {
+      margin-right: 8px;
+    }
+    #submit {
+      margin-top: 10px;
+      padding: 9px 0;
+      border: none;
+      background: #0841a0;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #submit:hover {
+      background: #2a62c5;
+    }
+    #existing {
+      display: none;
+      margin-top: 22px;
+      padding: 9px 0;
+      border: none;
+      background: #22bb33;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+  <h1>Login Form</h1>
+  <form id="loginForm" autocomplete="off">
+    <input 
+      type="text" 
+      placeholder="Username" 
+      id="username" 
+      autocomplete="off"
+    />
+    <input 
+      type="password" 
+      placeholder="Password" 
+      id="password" 
+      autocomplete="off"
+    />
+    <label for="checkbox">
+      <input type="checkbox" id="checkbox" />
+      Remember me.
+    </label>
+    <input type="submit" id="submit" value="Submit" />
+  </form>
+  <button id="existing">Login as existing user</button>
+  <script>
+    // Helper functions for storage
+    function saveCredentials(username, password) {
+      localStorage.setItem('rememberedUser', JSON.stringify({username, password}));
+    }
+    function removeCredentials() {
+      localStorage.removeItem('rememberedUser');
+    }
+    function getCredentials() {
+      const data = localStorage.getItem('rememberedUser');
+      return data ? JSON.parse(data) : null;
+    }
 
+    // DOM Elements
+    const form = document.getElementById('loginForm');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    const checkbox = document.getElementById('checkbox');
+    const submitBtn = document.getElementById('submit');
+    const existingBtn = document.getElementById('existing');
+
+    // Show/hide existing user button on load
+    window.addEventListener('DOMContentLoaded', function() {
+      const saved = getCredentials();
+      if (saved) {
+        existingBtn.style.display = 'block';
+      } else {
+        existingBtn.style.display = 'none';
+      }
+      // Ensure fields are empty and checkbox unchecked as per spec
+      username.value = '';
+      password.value = '';
+      checkbox.checked = false;
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userVal = username.value;
+      const passVal = password.value;
+      alert(`Logged in as ${userVal}`);
+      if (checkbox.checked) {
+        saveCredentials(userVal, passVal);
+        existingBtn.style.display = 'block';
+      } else {
+        removeCredentials();
+        existingBtn.style.display = 'none';
+      }
+      // (Optional: clear form fields after submission if needed)
+    });
+
+    existingBtn.addEventListener('click', function() {
+      const saved = getCredentials();
+      if (saved) {
+        alert(`Logged in as ${saved.username}`);
+      }
+    });
+  </script>
 </body>
-
 </html>
